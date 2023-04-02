@@ -131,14 +131,61 @@ class Category(APIView):
             new_dict["moneyIncome"] = str(int(value))
             dict_list.append(new_dict)
         return Response(dict_list)
-    
 
-# class Orders(APIView):
-#     def post(self, request):
-#         id = request.data.get('id', ())
-#         inn = Companies.objects.get(id=id).supplier_inn
-#         orders = Participants.objects.filter(supplier_inn=inn)
-#         for order in orders:
-#             if order.is_winner == 'Да':
-#                 purch_id = order.purch_id
-                
+
+class RadarChart(APIView):
+    def post(self, request):
+        id = request.data.get('id', ())
+        inn = Companies.objects.get(id=id).supplier_inn
+        orders = Participants.objects.filter(supplier_inn=inn)
+
+        y2022 = dict({
+            'orders': 0,
+            'price': 0,
+            'count': 0,
+            'win': 0,
+            'region': []
+        })
+        y2021 = dict({
+            'orders': 0,
+            'price': 0,
+            'count': 0,
+            'win': 0,
+            'region': []
+        })
+        for order in orders:
+            purch_id = order.purch_id
+            if Purchases.objects.get(purch_id=purch_id).publish_date.year == 2022:            
+                y2022['orders'] += 1
+
+            if Purchases.objects.get(purch_id=purch_id).publish_date.year == 2021:
+                y2021['orders'] += 1
+
+            if order.is_winner == 'Да':
+                purch_id = order.purch_id
+                try:
+                    contract = Contracts.objects.get(purch_id=purch_id)
+                    year = contract.contract_conclusion_date.year
+                    region = Purchases.objects.get(purch_id=purch_id).delivery_region
+                    if year == 2022:
+                        y2022['price'] += contract.price
+                        y2022['count'] += 1
+                        if region not in y2022['region']:
+                            y2022['region'].append(region)
+                        y2022['win'] += 1
+                    
+                    if year == 2021:
+                        y2021['price'] += contract.price
+                        y2021['count'] += 1
+                        if region not in y2021['region']:
+                            y2021['region'].append(region)
+                        y2021['win'] += 1
+                finally:
+                    continue
+
+        y2022['region'] = len(y2022['region'])
+        y2021['region'] = len(y2021['region'])
+        y2022['win'] = int(y2022['count'] / y2022['orders'] * 100)
+        y2021['win'] = int(y2021['count'] / y2021['orders'] * 100)
+        
+        return Response([y2022, y2021])

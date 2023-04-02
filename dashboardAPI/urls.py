@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import save_models, CompaniesList, CompaniesDetail, WinrateCompany, Regions, DatePrice, Category, AllContracts
+from .views import save_models, CompaniesList, CompaniesDetail, WinrateCompany, Regions, DatePrice, Category, AllContracts, RadarChart
 
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('api/date-price/', DatePrice.as_view()),
     path('api/category/', Category.as_view()),
     path('api/contracts/', AllContracts.as_view()),
+    path('api/radar/', RadarChart.as_view()),
 ]

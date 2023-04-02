@@ -63,17 +63,25 @@ class DatePrice(APIView):
         id = request.data.get('id', ())
         inn = Companies.objects.get(id=id).supplier_inn
         orders = Participants.objects.filter(supplier_inn=inn)
-        months = dict()
+        years = dict()
         for order in orders:
             if order.is_winner == 'Да':
                 purch_id = order.purch_id
-                month = Purchases.objects.get(purch_id=purch_id).publish_date.month
+                year = Purchases.objects.get(purch_id=purch_id).publish_date.year
                 price = Purchases.objects.get(purch_id=purch_id).price
-                if month in months:
-                    months[month] += price
+                if year in years:
+                    years[year] += price
                 else:
-                    months[month] = price
-        return Response(months)
+                    years[year] = price
+
+        dict_list = []
+
+        for key, value in years.items():
+            new_dict = {}
+            new_dict["year"] = key
+            new_dict["moneyIncome"] = str(int(value))
+            dict_list.append(new_dict)
+        return Response(dict_list)
 
 
 class Category(APIView):

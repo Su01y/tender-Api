@@ -187,7 +187,36 @@ class RadarChart(APIView):
 
         y2022['region'] = len(y2022['region'])
         y2021['region'] = len(y2021['region'])
-        y2022['win'] = int(y2022['count'] / y2022['orders'] * 100)
-        y2021['win'] = int(y2021['count'] / y2021['orders'] * 100)
+        y2022['win'] = int(y2022['count'] / y2022['orders'] * 100) / 100
+        y2021['win'] = int(y2021['count'] / y2021['orders'] * 100) / 100
+
+        y2022['price'] = round(y2022['price'] / (y2022['price'] + y2021['price']), 4)
+        y2021['price'] = round(y2021['price'] / (y2022['price'] + y2021['price']), 4)
+
+        y2022['count'] = round(y2022['count'] / (y2022['count'] + y2021['count']), 4)
+        y2021['count'] = round(y2021['count'] / (y2022['count'] + y2021['count']), 4)
+
+        y2022['orders'] = round(y2022['orders'] / (y2022['orders'] + y2021['orders']), 4)
+        y2021['orders'] = round(y2021['orders'] / (y2022['orders'] + y2021['orders']), 4)
+
+        y2022['region'] = round(y2022['region'] / (y2022['region'] + y2021['region']), 4)
+        y2021['region'] = round(y2021['region'] / (y2022['region'] + y2021['region']), 4)
         
-        return Response([y2022, y2021])
+        data = [y2022, y2021]
+        result = []
+
+        region_dict = {"param": "region"}    
+        for region in set(d['region'] for d in data):
+            for d in data:
+                if d['region'] == region:
+                    region_dict[str(d['year'])] = d['region']
+        result.append(region_dict)
+
+        tastes = ["price", "orders", "count", "win"]
+        for taste in tastes:
+            taste_dict = {"param": taste}
+            for d in data:
+                taste_dict[str(d['year'])] = d[taste]
+            result.append(taste_dict)
+
+        return Response(result)

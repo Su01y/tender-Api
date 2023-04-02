@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Purchases, Companies, Participants, Contracts
+from .models import Purchases, Companies
 
 
 class PurchasesSerializer(serializers.ModelSerializer):
@@ -15,7 +15,8 @@ class CompaniesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class AspirantEducation(serializers.ModelSerializer):
-#     class Meta:
-#         model = Aspirant
-#         fields = ('name', 'education')
+# class OrdersSerializer(serializers):
+#     data = serializers.DateField()
+#     name = serializers.CharField()
+#     res = serializers.BooleanField()
+#     cat = serializers.CharField()

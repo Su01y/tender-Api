@@ -1,10 +1,8 @@
-from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.db.models import Count
 
 from .models import Purchases, Companies, Participants
-from .serializers import PurchasesSerializer, CompaniesSerializer
+from .serializers import CompaniesSerializer
 from .category import categorize
 
 
@@ -40,7 +38,7 @@ class WinrateCompany(APIView):
             res = res.is_winner
             if res == 'Да':
                 win += 1
-        return Response({'winrate': win / count_orders, 'count_orders': count_orders})
+        return Response({'winrate': int(win / count_orders), 'count_orders': count_orders})
 
 
 class Regions(APIView):
@@ -89,10 +87,21 @@ class Category(APIView):
                 purch_id = order.purch_id
                 cat = Purchases.objects.get(purch_id=purch_id).lot_name
                 if cat:
-                    cat = categorize
+                    cat = categorize(cat)
                     price = Purchases.objects.get(purch_id=purch_id).price
                     if cat in categories:
                         categories[cat] += price
                     else:
                         categories[cat] = price
         return Response(categories)
+    
+
+# class Orders(APIView):
+#     def post(self, request):
+#         id = request.data.get('id', ())
+#         inn = Companies.objects.get(id=id).supplier_inn
+#         orders = Participants.objects.filter(supplier_inn=inn)
+#         for order in orders:
+#             if order.is_winner == 'Да':
+#                 purch_id = order.purch_id
+                

@@ -4,8 +4,6 @@ import pandas as pd
 # from nltk import pos_tag
 # from nltk.tokenize import word_tokenize
 import pymorphy2
-import requests
-from bs4 import BeautifulSoup
 
 
 df = pd.read_excel('kpgz.xlsx')

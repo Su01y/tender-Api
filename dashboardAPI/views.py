@@ -140,6 +140,7 @@ class RadarChart(APIView):
         orders = Participants.objects.filter(supplier_inn=inn)
 
         y2022 = dict({
+            'year': 2022,
             'orders': 0,
             'price': 0,
             'count': 0,
@@ -147,6 +148,7 @@ class RadarChart(APIView):
             'region': []
         })
         y2021 = dict({
+            'year': 2021,
             'orders': 0,
             'price': 0,
             'count': 0,

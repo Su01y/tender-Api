@@ -15,7 +15,7 @@ def save_models(request):
 
 class CompaniesList(APIView):
     def get(self, request):
-        companies = Companies.objects.all()
+        companies = Companies.objects.all()[:1000]
         serializer = CompaniesSerializer(companies, many=True)
         return Response(serializer.data)
 

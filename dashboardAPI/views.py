@@ -93,7 +93,14 @@ class Category(APIView):
                         categories[cat] += price
                     else:
                         categories[cat] = price
-        return Response(categories)
+        dict_list = []
+
+        for key, value in categories.items():
+            new_dict = {}
+            new_dict["category"] = key.title()
+            new_dict["moneyIncome"] = str(int(value))
+            dict_list.append(new_dict)
+        return Response(dict_list)
     
 
 # class Orders(APIView):

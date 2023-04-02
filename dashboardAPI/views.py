@@ -205,14 +205,14 @@ class RadarChart(APIView):
         data = [y2022, y2021]
         result = []
 
-        region_dict = {"param": "region"}    
+        region_dict = {"param": "количество регионов"}    
         for region in set(d['region'] for d in data):
             for d in data:
                 if d['region'] == region:
                     region_dict[str(d['year'])] = d['region']
         result.append(region_dict)
 
-        tastes = ["price", "orders", "count", "win"]
+        tastes = ["доход", "количество заявок", "выигранные тендеры", "процент побед"]
         for taste in tastes:
             taste_dict = {"param": taste}
             for d in data:

@@ -5,6 +5,7 @@ import pandas as pd
 # from nltk.tokenize import word_tokenize
 import pymorphy2
 import numpy as np
+# import time
 
 
 df = pd.read_excel('kpgz.xlsx')
@@ -28,14 +29,21 @@ def nouns_only(text):
 
 
 def categorize(service):
+    # print('start', time.time())
     category = service
     nouns_s = nouns_only(service)
     max_cos = 0
+    # print('med', time.time())
     for n, c in zip(nouns_cat, categories):
-        n = eval(n)
+        n = n.replace('[', ' ')
+        n = n.replace(']', ' ')
+        n = n.replace("'", ' ')
+        n = n.replace(',', ' ')        
+        n = n.split()
+        
         set1 = set(nouns_s)
         set2 = set(n)
-        total_set = set1.union(set2)
+        total_set = set1 | set2
         vector1 = np.array([nouns_s.count(word) for word in total_set])
         vector2 = np.array([n.count(word) for word in total_set])
 
@@ -44,4 +52,5 @@ def categorize(service):
         if cos > max_cos:
             category = c
             max_cos = cos
+    # print('end', time.time())
     return category

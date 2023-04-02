@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import save_models, CompaniesList, CompaniesDetail, WinrateCompany, Regions, DatePrice, Category
+from .views import save_models, CompaniesList, CompaniesDetail, WinrateCompany, Regions, DatePrice, Category, AllContracts
 
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/get-regions/', Regions.as_view()),
     path('api/date-price/', DatePrice.as_view()),
     path('api/category/', Category.as_view()),
+    path('api/contracts/', AllContracts.as_view()),
 ]

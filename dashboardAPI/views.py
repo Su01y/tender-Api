@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Purchases, Companies, Participants
+from .models import Contracts, Purchases, Companies, Participants
 from .serializers import CompaniesSerializer
 from .category import categorize
 
@@ -81,6 +81,28 @@ class DatePrice(APIView):
             new_dict["moneyIncome"] = str(int(value))
             dict_list.append(new_dict)
         return Response(dict_list)
+
+
+class AllContracts(APIView):
+    def post(self, request):
+        id = request.data.get('id', ())
+        inn = Companies.objects.get(id=id).supplier_inn
+        orders = Participants.objects.filter(supplier_inn=inn)
+        results = []
+        for order in orders:
+            if order.is_winner == 'Да':
+                frame = dict()
+                purch_id = order.purch_id
+                try:
+                    date = Contracts.objects.get(purch_id=purch_id).contract_conclusion_date
+                    price = Contracts.objects.get(purch_id=purch_id).price
+                    frame['id'] = purch_id
+                    frame['data'] = date
+                    frame['price'] = price
+                    results.append(frame)
+                finally:
+                    continue
+        return Response(results)
 
 
 class Category(APIView):

@@ -21,6 +21,11 @@ class Purchases(models.Model):
         print(self.category)
         super(Purchases, self).save(*args, **kwargs)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['purch_id', 'price', 'delivery_region', 'publish_date', 'category'])
+        ]
+
 
 class Companies(models.Model):
     id = models.IntegerField(primary_key=True, null=False, unique=True, serialize=True)
@@ -31,12 +36,22 @@ class Companies(models.Model):
     status = models.BooleanField()
     count_managers = models.IntegerField()
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['supplier_inn', 'id'])
+        ]
+
 
 class Participants(models.Model):
     id = models.IntegerField(primary_key=True, null=False, unique=True)
     purch_id = models.CharField(max_length=32)
     supplier_inn = models.IntegerField()
     is_winner = models.CharField(max_length=255)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['supplier_inn', 'purch_id'])
+        ]
 
 
 class Contracts(models.Model):
@@ -45,3 +60,8 @@ class Contracts(models.Model):
     contract_reg_number = models.CharField(default=None, max_length=256, null=True, blank=True)
     price = models.FloatField()
     contract_conclusion_date = models.DateTimeField()    
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['purch_id', 'id'])
+        ]

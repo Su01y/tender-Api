@@ -93,6 +93,7 @@ class Category(APIView):
             if order.is_winner == 'Да':
                 purch_id = order.purch_id
                 cat = Purchases.objects.get(purch_id=purch_id).lot_name
+                print(cat)
                 if cat:
                     cat = categorize(cat)
                     price = Purchases.objects.get(purch_id=purch_id).price

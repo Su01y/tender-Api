@@ -3,7 +3,7 @@ from .category import categorize
 
 
 class Purchases(models.Model):
-    pusch_id = models.CharField(max_length=32, primary_key=True)
+    purch_id = models.CharField(max_length=32, primary_key=True)
     purchase_name = models.CharField(max_length=256)
     lot_name = models.CharField(max_length=256)
     price = models.FloatField()

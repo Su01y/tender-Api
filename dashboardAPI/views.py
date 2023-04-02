@@ -35,10 +35,9 @@ class WinrateCompany(APIView):
         count_orders = len(orders)
         win = 0
         for res in orders:
-            res = res.is_winner
-            if res == 'Да':
+            if res.is_winner == 'Да':
                 win += 1
-        return Response({'winrate': int(win / count_orders), 'count_orders': count_orders})
+        return Response({'winrate': int(win / count_orders * 100), 'count_orders': count_orders})
 
 
 class Regions(APIView):

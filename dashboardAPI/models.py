@@ -33,12 +33,14 @@ class Companies(models.Model):
 
 
 class Participants(models.Model):
+    id = models.IntegerField(primary_key=True, null=False, unique=True)
     purch_id = models.CharField(max_length=32)
     supplier_inn = models.IntegerField()
-    is_winner = models.BooleanField()
+    is_winner = models.CharField(max_length=255)
 
 
 class Contracts(models.Model):
+    id = models.IntegerField(primary_key=True, null=False, unique=True)
     purch_id = models.CharField(max_length=256)
     contract_reg_number = models.CharField(default=None, max_length=256, null=True, blank=True)
     price = models.FloatField()
